@@ -12,9 +12,8 @@ public:
 	double p_sum[30];
 
 
-	int weight_id_x;
-	int weight_id_y;
-
+	int weight_id;
+	
 	int if_map_id;
 
 	double* dram_value;
@@ -65,13 +64,12 @@ public:
 
 
 
-	void set_weight_id(int x, int y) {
-		weight_id_x = x;
-		weight_id_y = y;
+	void set_weight_id(int id) {
+		weight_id = id;
 	}
 
 	void set_weight(int i, int j) {
-		if (i == weight_id_y) {
+		if (i == weight_id) {
 			weight[j] = (double) *dram_value;
 		}
 	}

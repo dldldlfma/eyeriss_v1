@@ -52,7 +52,7 @@ int main()
 	for (int pe_y = 0; pe_y < PE_array.size(); pe_y++) {
 		for (int pe_x = 0; pe_x < PE_array[0].size(); pe_x++) {
 			PE_array[pe_y][pe_x].set_size_value(32, 3, 1);
-			PE_array[pe_y][pe_x].set_weight_id(pe_x%3, pe_y%3); //%3 
+			PE_array[pe_y][pe_x].set_weight_id(pe_y%3); //%3 
 			PE_array[pe_y][pe_x].init_reg_file();
 		}
 	}
