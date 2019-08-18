@@ -53,6 +53,7 @@ int main()
 		for (int pe_x = 0; pe_x < PE_array[0].size(); pe_x++) {
 			PE_array[pe_y][pe_x].set_size_value(32, 3, 1);
 			PE_array[pe_y][pe_x].set_weight_id(pe_x%3, pe_y%3); //%3 
+			PE_array[pe_y][pe_x].init_reg_file();
 		}
 	}
 	cout << endl;
@@ -86,7 +87,81 @@ int main()
 		cout << endl;
 	}
 
+	cout << "-----Set PE_array ifmap_id-----" << endl;
+	for (int pe_y = 0; pe_y < PE_array.size(); pe_y++) {
+		for (int pe_x = 0; pe_x < PE_array[0].size(); pe_x++) {
+			PE_array[pe_y][pe_x].set_if_map_id( int(pe_y/FILTER_SIZE)* PE_ARRAY_ROW + (pe_y%FILTER_SIZE) + pe_x);
+		}
+	}
 
+	cout << "-----Show PE_array ifmap_id-----" << endl;
+	for (int pe_y = 0; pe_y < PE_array.size()-1; pe_y++) {
+		for (int pe_x = 0; pe_x < PE_array[0].size(); pe_x++) {
+			cout << PE_array[pe_y][pe_x].if_map_id << " ";
+		}
+		cout << endl;
+	}
 
+	cout << "-----Set PE_array ifmap_value-----" << endl;
+	for (int i = 0; i < ifmap.size(); i++) {  //32
+		for (int j = 0; j < ifmap[0].size(); j++) { //32
+			dram_data = ifmap[i][j];
+			for (int pe_y = 0; pe_y < PE_array.size(); pe_y++) {
+				for (int pe_x = 0; pe_x < PE_array[0].size(); pe_x++) {
+					PE_array[pe_y][pe_x].set_if_map(i, j);
+
+				}
+			}
+		}
+	}
+
+	cout << "-----Show PE_array ifmap-----" << endl;
+	for (int pe_y = 0; pe_y < PE_array.size()-1; pe_y++) {
+		cout << " ---" << pe_y << "---" << endl;
+		for (int pe_x = 0; pe_x < PE_array[0].size(); pe_x++) {
+			PE_array[pe_y][pe_x].show_if_map();
+		}
+		cout << endl;
+	}
+
+	cout << "----- Ifmap array -----" << endl;
+	show_Mat2D(ifmap);
+
+	cout << "----calculation-----" << endl;
+	for (int pe_y = 0; pe_y < PE_array.size() - 1; pe_y++) {
+		for (int pe_x = 0; pe_x < PE_array[0].size(); pe_x++) {
+			PE_array[pe_y][pe_x].single_line_calc();
+		}
+		cout << endl;
+	}
+
+	cout << "----show p_sum-----" << endl;
+	for (int pe_y = 0; pe_y < PE_array.size() - 1; pe_y++) {
+		for (int pe_x = 0; pe_x < PE_array[0].size(); pe_x++) {
+			PE_array[pe_y][pe_x].show_psum();
+		}
+		cout << endl;
+	}
+
+	cout << "----ofmap_init-----" << endl;
+	Mat2D ofmap;
+	ofmap.resize(IFMAP_SIZE - FILTER_SIZE + 1);
+	for (int i = 0; i < ofmap.size(); i++) {
+		ofmap[i].resize(IFMAP_SIZE - FILTER_SIZE + 1);
+		for (int j = 0; j < IFMAP_SIZE - FILTER_SIZE + 1; j++) {
+			ofmap[i][j] = 0;
+		}
+	}
+
+	cout << "----p_sum accumulation for ofmap-----" << endl;
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 10; j++) {
+			for (int k = 0; k < 30; k++) {
+				ofmap[int(i/3)*10 + j][k] += PE_array[i][j].p_sum[k];
+			}
+		}
+	}
+	cout << "----show ofmap-----" << endl;
+	show_Mat2D(ofmap);
 	return 0;
 }

@@ -8,15 +8,14 @@ private:
 
 public:
 	double weight[12];
-	double input_map[224];
-	double p_sum[24];
+	double if_map[224];
+	double p_sum[30];
 
 
 	int weight_id_x;
 	int weight_id_y;
 
-	int ifmap_id_x;
-	int ifmap_id_y;
+	int if_map_id;
 
 	double* dram_value;
 
@@ -52,7 +51,7 @@ public:
 			weight[i] = 0;
 		}
 		for (int i = 0; i < i_size; i++) {
-			input_map[i] = 0;
+			if_map[i] = 0;
 		}
 		for (int i = 0; i < o_size; i++) {
 			p_sum[i] = 0;
@@ -85,23 +84,24 @@ public:
 	}
 
 
-	void set_input_map(int x, int y) {
-
+	void set_if_map_id(int id) {
+		if_map_id = id;
 	}
 
-	void set_input_map(int i, int j) {
-
+	void set_if_map(int i, int j) {
+		if (i == if_map_id) {
+			if_map[j] = (double)* dram_value;
+		}
 	}
 
-	void show_input_map() {
+	
+
+	void show_if_map() {
 		for (int i = 0; i < i_size; i++) {
-			cout << input_map[i] << " ";
+			cout << if_map[i] << " ";
 		}
 		cout << endl;
 	}
-
-
-
 
 	void set_omap() {
 		for (int i = 0; i < o_size; i++) {
@@ -112,16 +112,17 @@ public:
 	void single_line_calc() {
 		for (int i = 0; i < o_size; i++) {
 			for (int j = 0; j < f_size; j++) {
-				p_sum[i] += weight[j] * input_map[i + j];
+				//cout << p_sum[i] << endl;
+				p_sum[i] += weight[j] * if_map[i + j];
 			}
 		}
 	}
 
 	void show_psum() {
 		for (int i = 0; i < o_size; i++) {
-			printf("%lf ", p_sum[i]);
+			printf("%.2lf ", p_sum[i]);
 		}
 		printf("\n");
-	}
+	}	
 
 };
